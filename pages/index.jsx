@@ -1,7 +1,9 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
-import Form from "../components/Form";
+import FormAddress from "../components/FormAddress";
+import FormDate from "../components/FormDate";
+import FormName from "../components/FormName";
 import Meta from "../components/Meta";
 import Reason from "../components/Reason";
 import { generatePdf } from "../lib/pdf-util";
@@ -51,6 +53,10 @@ export default function Home() {
     setState({ ...state, [input.id]: input.value });
   };
 
+  const setTime = (value) => {
+    setState({ ...state, heuresortie: value });
+  };
+
   const onDateKeyUp = (event) => {
     const input = event.target;
     const key = event.keyCode || event.charCode;
@@ -74,15 +80,6 @@ export default function Home() {
     <>
       <Meta />
       <div className="p-4 md:p-6 lg:p-12 max-w-2xl mx-auto">
-        <div className="h-8 w-8 mb-6">
-          <Image
-            alt="logo"
-            className="h-full w-full"
-            height={180}
-            src="/apple-touch-icon.png"
-            width={180}
-          />
-        </div>
         <div className="prose mb-12">
           <h1>Attestation de déplacement dérogatoire</h1>
           <p>
@@ -96,11 +93,14 @@ export default function Home() {
           </p>
         </div>
 
+        <FormDate setTime={setTime} state={state}></FormDate>
+
         {initialStateValid && (
           <Reason stateValid={stateValid} onClick={onClick} />
         )}
 
-        <Form state={state} onChange={onChange} onDateKeyUp={onDateKeyUp} />
+        <FormName state={state} onChange={onChange} onDateKeyUp={onDateKeyUp} />
+        <FormAddress state={state} onChange={onChange} />
 
         {!initialStateValid && (
           <Reason stateValid={stateValid} onClick={onClick} />
