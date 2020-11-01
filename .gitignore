@@ -2,3 +2,5 @@ node_modules
 .next
 .vercel
 out
+*firebase*
+package-lock.json
