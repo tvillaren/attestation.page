@@ -1,10 +1,33 @@
-import React from "react";
+import { RichTextFieldReadError } from "pdf-lib";
+import React, { useEffect, useState } from "react";
 
-export default function Form({ state, onChange, onDateKeyUp }) {
-  const { lastname, firstname, birthday, lieunaissance } = state;
+export const updatePersonKey = (state) => {
+  let result = "";
+  Object.entries(state.persons).forEach(([key, value]) => {
+    if (
+      state.firstname === value.firstname &&
+      state.lastname === value.lastname &&
+      state.birthday === value.birthday &&
+      state.lieunaissance === value.lieunaissance
+    )
+      result = key;
+  });
+  return result;
+};
+
+export default function Form({ state, onChange, onDateKeyUp, addPerson }) {
+  const { lastname, firstname, birthday, lieunaissance, persons } = state;
+  const [personKey, setPersonKey] = useState("");
+  const listPersons = Object.keys(persons);
+
+  const [isCurrentPersonKeyValid, setIsCurrentPersonKeyValid] = useState(false);
+
+  useEffect(() => {
+    setIsCurrentPersonKeyValid(listPersons.indexOf(personKey) > -1);
+  });
 
   return (
-    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
       <label htmlFor="firstname">Prénom</label>
       <input
         autoFocus
@@ -66,6 +89,27 @@ export default function Form({ state, onChange, onDateKeyUp }) {
         value={lieunaissance}
         onChange={onChange}
       />
-    </form>
+
+      <label htmlFor="personKey">Mémoriser la personne</label>
+      <div className="flex">
+        <input
+          aria-invalid="false"
+          className="form-control"
+          id="personKey"
+          name="personKey"
+          placeholder="Dominique"
+          type="text"
+          value={personKey}
+          onChange={(e) => setPersonKey(e.target.value)}
+        />
+        <button
+          className="w-auto inline-block ml-4"
+          onClick={() => addPerson(personKey)}
+        >
+          {isCurrentPersonKeyValid ? "Sauvegarder" : "Ajouter"}
+        </button>
+      </div>
+      <div>Personnes mémorisées: {listPersons.join(", ")}</div>
+    </div>
   );
 }

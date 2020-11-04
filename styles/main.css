@@ -42,3 +42,19 @@ button:disabled {
 .icon {
   @apply w-6 h-6 inline-block mr-4;
 }
+
+.btn-green {
+  @apply bg-teal-400 
+}
+
+.btn-green:hover {
+  @apply bg-teal-300;
+}
+
+.btn-green:focus {
+  @apply outline-none
+}
+
+.btn-add {
+  @apply mb-4
+}

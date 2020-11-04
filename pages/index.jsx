@@ -1,9 +1,8 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import FormAddress from "../components/FormAddress";
+import FormAddress, { updateAddressKey } from "../components/FormAddress";
 import FormDate from "../components/FormDate";
-import FormName from "../components/FormName";
+import FormName, { updatePersonKey } from "../components/FormName";
 import Meta from "../components/Meta";
 import Reason from "../components/Reason";
 import { generatePdf } from "../lib/pdf-util";
@@ -19,6 +18,8 @@ export default function Home() {
     address: "",
     zipcode: "",
     town: "",
+    addresses: {},
+    persons: {},
   };
 
   const [state, setState] = useLocalStorage(
@@ -37,7 +38,11 @@ export default function Home() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    setState({ ...state, heuresortie, datesortie });
+    setState({
+      ...state,
+      heuresortie,
+      datesortie,
+    });
   }, []);
 
   const [stateValid, setStateValid] = useState(false);
@@ -46,6 +51,8 @@ export default function Home() {
     if (validateState(state)) {
       setStateValid(true);
     }
+    setAddressKey(updateAddressKey(state));
+    setPersonKey(updatePersonKey(state));
   }, [state]);
 
   const onChange = (event) => {
@@ -53,9 +60,88 @@ export default function Home() {
     setState({ ...state, [input.id]: input.value });
   };
 
+  // Address handling
+
+  const [addressKey, setAddressKey] = useState("");
+  const listAddressKey = Object.keys(state.addresses);
+
+  const pickAddress = (key) => {
+    const data = state.addresses[key];
+    if (data) {
+      setAddress(data);
+      setAddressKey(key);
+    }
+  };
+
+  const setAddress = (addressObj) => {
+    setState({
+      ...state,
+      address: addressObj.address,
+      zipcode: addressObj.zipcode,
+      town: addressObj.town,
+    });
+  };
+
+  const addAddress = (key) => {
+    if (!key) return;
+
+    const newAddress = {
+      address: state.address,
+      zipcode: state.zipcode,
+      town: state.town,
+    };
+
+    setState({
+      ...state,
+      addresses: { ...state.addresses, [key]: newAddress },
+    });
+  };
+
+  // Person handling
+
+  const listPersonKey = Object.keys(state.persons);
+  const [personKey, setPersonKey] = useState("");
+
+  const pickPerson = (key) => {
+    const data = state.persons[key];
+    if (data) {
+      setPerson(data);
+    }
+  };
+
+  const setPerson = (personObj) => {
+    setState({
+      ...state,
+      firstname: personObj.firstname,
+      lastname: personObj.lastname,
+      birthday: personObj.birthday,
+      lieunaissance: personObj.lieunaissance,
+    });
+  };
+
+  const addPerson = (key) => {
+    if (!key) return;
+
+    const newPerson = {
+      firstname: state.firstname,
+      lastname: state.lastname,
+      birthday: state.birthday,
+      lieunaissance: state.lieunaissance,
+    };
+
+    setState({
+      ...state,
+      persons: { ...state.persons, [key]: newPerson },
+    });
+  };
+
+  // Time handling
+
   const setTime = (value) => {
     setState({ ...state, heuresortie: value });
   };
+
+  // Generic handlers
 
   const onDateKeyUp = (event) => {
     const input = event.target;
@@ -93,14 +179,63 @@ export default function Home() {
           </p>
         </div>
 
-        <FormDate setTime={setTime} state={state}></FormDate>
+        <FormDate
+          setTime={setTime}
+          state={state}
+          onChange={onChange}
+        ></FormDate>
+        {listPersonKey.length > 0 && listAddressKey.length > 0 && (
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
+            <div className="flex">
+              {listAddressKey.map((key) => {
+                return (
+                  <button
+                    key={key}
+                    className={
+                      "text-center mx-2" +
+                      (addressKey === key ? " btn-green" : "")
+                    }
+                    onClick={() => pickAddress(key)}
+                  >
+                    {key}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex">
+              {listPersonKey.map((key) => {
+                return (
+                  <button
+                    key={key}
+                    className={
+                      "text-center mx-2" +
+                      (personKey === key ? " btn-green" : "")
+                    }
+                    onClick={() => pickPerson(key)}
+                  >
+                    {key}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {initialStateValid && (
           <Reason stateValid={stateValid} onClick={onClick} />
         )}
 
-        <FormName state={state} onChange={onChange} onDateKeyUp={onDateKeyUp} />
-        <FormAddress state={state} onChange={onChange} />
+        <FormName
+          addPerson={addPerson}
+          state={state}
+          onChange={onChange}
+          onDateKeyUp={onDateKeyUp}
+        />
+        <FormAddress
+          addAddress={addAddress}
+          state={state}
+          onChange={onChange}
+        />
 
         {!initialStateValid && (
           <Reason stateValid={stateValid} onClick={onClick} />
