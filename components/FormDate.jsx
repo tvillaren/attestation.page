@@ -38,37 +38,37 @@ export default function Form({ state, setTime, onChange }) {
 
       <div className="flex">
         <button
-          className="text-center w-1/6"
+          className="btn-add-time"
           onClick={() => addTimeToHeureSortie(-30)}
         >
           -30
         </button>
         <button
-          className="ml-2 text-center w-1/6"
+          className="btn-add-time ml-2"
           onClick={() => addTimeToHeureSortie(-5)}
         >
           -5
         </button>
         <button
-          className="ml-2 text-center w-1/6"
+          className="btn-add-time ml-2"
           onClick={() => addTimeToHeureSortie(-1)}
         >
           -1
         </button>
         <button
-          className="ml-2 text-center w-1/6"
+          className="btn-add-time ml-2"
           onClick={() => addTimeToHeureSortie(1)}
         >
           +1
         </button>
         <button
-          className="ml-2 text-center w-1/6"
+          className="btn-add-time ml-2"
           onClick={() => addTimeToHeureSortie(5)}
         >
           +5
         </button>
         <button
-          className="ml-2 text-center w-1/6"
+          className="btn-add-time ml-2"
           onClick={() => addTimeToHeureSortie(30)}
         >
           +30

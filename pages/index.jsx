@@ -63,7 +63,7 @@ export default function Home() {
   // Address handling
 
   const [addressKey, setAddressKey] = useState("");
-  const listAddressKey = Object.keys(state.addresses);
+  const listAddressKey = () => Object.keys(state.addresses);
 
   const pickAddress = (key) => {
     const data = state.addresses[key];
@@ -99,7 +99,7 @@ export default function Home() {
 
   // Person handling
 
-  const listPersonKey = Object.keys(state.persons);
+  const listPersonKey = () => Object.keys(state.persons);
   const [personKey, setPersonKey] = useState("");
 
   const pickPerson = (key) => {
@@ -184,42 +184,41 @@ export default function Home() {
           state={state}
           onChange={onChange}
         ></FormDate>
-        {listPersonKey.length > 0 && listAddressKey.length > 0 && (
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
-            <div className="flex">
-              {listAddressKey.map((key) => {
-                return (
-                  <button
-                    key={key}
-                    className={
-                      "text-center mx-2" +
-                      (addressKey === key ? " btn-green" : "")
-                    }
-                    onClick={() => pickAddress(key)}
-                  >
-                    {key}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex">
-              {listPersonKey.map((key) => {
-                return (
-                  <button
-                    key={key}
-                    className={
-                      "text-center mx-2" +
-                      (personKey === key ? " btn-green" : "")
-                    }
-                    onClick={() => pickPerson(key)}
-                  >
-                    {key}
-                  </button>
-                );
-              })}
-            </div>
+
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
+          <div className="flex">
+            {listAddressKey().map((key) => {
+              return (
+                <button
+                  key={key}
+                  className={
+                    "text-center mx-2 px-2" +
+                    (addressKey === key ? " btn-green" : "")
+                  }
+                  onClick={() => pickAddress(key)}
+                >
+                  {key}
+                </button>
+              );
+            })}
           </div>
-        )}
+          <div className="flex">
+            {listPersonKey().map((key) => {
+              return (
+                <button
+                  key={key}
+                  className={
+                    "text-center mx-2 px-2" +
+                    (personKey === key ? " btn-green" : "")
+                  }
+                  onClick={() => pickPerson(key)}
+                >
+                  {key}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {initialStateValid && (
           <Reason stateValid={stateValid} onClick={onClick} />
@@ -231,6 +230,7 @@ export default function Home() {
           onChange={onChange}
           onDateKeyUp={onDateKeyUp}
         />
+
         <FormAddress
           addAddress={addAddress}
           state={state}
@@ -248,8 +248,12 @@ export default function Home() {
 
           <p>
             Code source disponible sur{" "}
-            <a href="https://github.com/benjamintd/attestation.page">GitHub</a>,
-            inspiré des projets de{" "}
+            <a href="https://github.com/tvillaren/attestation.page">GitHub</a>,
+            adapté du projet de{" "}
+            <a href="https://github.com/benjamintd/attestation.page">
+              Benjamin
+            </a>
+            , lui-même inspiré des projets de{" "}
             <a href="https://github.com/LAB-MI">Lab MI</a>.
           </p>
           <p>
