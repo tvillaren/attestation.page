@@ -17,7 +17,7 @@ export default function Reason({ onClick, stateValid }) {
     <div className="w-full mb-8">
       <button disabled={!stateValid} id="sport_animaux" onClick={onClick}>
         <Sport className="icon" />
-        Je me déplace à 1 km de chez moi
+        Je me promène dans un rayon de 20 km
       </button>
       <button disabled={!stateValid} id="travail" onClick={onClick}>
         <Work className="icon" />
@@ -25,7 +25,7 @@ export default function Reason({ onClick, stateValid }) {
       </button>
       <button disabled={!stateValid} id="achats" onClick={onClick}>
         <Shop className="icon" />
-        Je vais faire des achats de première nécessité
+        Je vais faire des achats, visiter un musée ou un lieu de culte
       </button>
       <button disabled={!stateValid} id="enfants" onClick={onClick}>
         <Child className="icon" />
